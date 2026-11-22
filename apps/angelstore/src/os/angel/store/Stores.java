@@ -20,7 +20,7 @@ final class Stores {
 
     static final class App {
         String pkg, title, subtitle, icon, rating, query, file, sha256;
-        boolean card, angel; int versionCode; long size;
+        boolean card, angel; int versionCode; long size; String[] urls;
         int playRank = -1, ruRank = -1, fdRank = -1;
         boolean inPlay() { return playRank >= 0; }
         boolean inRu() { return ruRank >= 0; }
@@ -72,6 +72,9 @@ final class Stores {
             JSONObject o = arr.getJSONObject(i); App a = new App(); a.angel = true;
             a.pkg = o.getString("pkg"); a.title = o.getString("name"); a.subtitle = o.optString("description", "");
             a.versionCode = o.getInt("versionCode"); a.file = o.getString("file"); a.sha256 = o.getString("sha256"); a.size = o.getLong("size");
+            JSONArray u = o.optJSONArray("urls");   // GitHub Releases first, our server as the mirror
+            if (u != null && u.length() > 0) { a.urls = new String[u.length() + 1]; for (int k = 0; k < u.length(); k++) a.urls[k] = u.getString(k); a.urls[u.length()] = API + "/apk/" + a.file; }
+            else a.urls = new String[] { API + "/apk/" + a.file };
             a.icon = API + "/icon/" + a.pkg + ".png"; a.rating = "v" + o.optString("versionName", "");
             out.add(a);
         }
@@ -93,6 +96,37 @@ final class Stores {
     static void fdroidFetch(App a) throws Exception {
         JSONObject o = new JSONObject(new String(get(API + "/api/fdroid/fetch?pkg=" + URLEncoder.encode(a.pkg, "UTF-8")), "UTF-8"));
         a.file = o.getString("file"); a.sha256 = o.getString("sha256"); a.size = o.getLong("size"); a.versionCode = o.getInt("versionCode");
+    }
+
+    interface Progress { void on(long done, long total); }
+
+    /** Resolve the current F-Droid build straight from f-droid.org (no load on our server). */
+    static void fdroidDirect(App a) throws Exception {
+        JSONObject o = new JSONObject(new String(get("https://f-droid.org/api/v1/packages/" + URLEncoder.encode(a.pkg, "UTF-8")), "UTF-8"));
+        a.versionCode = o.getInt("suggestedVersionCode"); a.file = a.pkg + "_" + a.versionCode + ".apk"; a.sha256 = null;
+        a.urls = new String[] { "https://f-droid.org/repo/" + a.file };
+    }
+
+    /** Try each URL in turn; stream to disk with progress; returns hex SHA-256 of what was saved. */
+    static String download(String[] urls, java.io.File dst, Progress p) throws Exception {
+        Exception last = null;
+        for (String u : urls) {
+            try { return download(u, dst, p); } catch (Exception e) { last = e; }
+        }
+        throw last == null ? new java.io.IOException("no source") : last;
+    }
+
+    static String download(String url, java.io.File dst, Progress p) throws Exception {
+        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        c.setConnectTimeout(8000); c.setReadTimeout(30000); c.setRequestProperty("User-Agent", UA); c.setInstanceFollowRedirects(true);
+        java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+        long total = c.getContentLengthLong(), done = 0;
+        try (InputStream in = c.getInputStream(); java.io.FileOutputStream out = new java.io.FileOutputStream(dst)) {
+            byte[] buf = new byte[65536]; int n;
+            while ((n = in.read(buf)) > 0) { out.write(buf, 0, n); md.update(buf, 0, n); done += n; if (p != null) p.on(done, total); }
+        } finally { c.disconnect(); }
+        StringBuilder hex = new StringBuilder(); for (byte b : md.digest()) hex.append(String.format("%02x", b));
+        return hex.toString();
     }
 
     /** Stream a URL to a file while hashing it; returns hex SHA-256. */

@@ -98,6 +98,13 @@ public class Main extends Activity {
         e.addView(t1); e.addView(t2);
         empty = e; body.addView(e, new FrameLayout.LayoutParams(-1, -1));
         list.setVisibility(View.GONE);
+        instance = this;
+        sheet = new InstallSheet(this, new InstallSheet.Actions() {
+            public void install(Stores.App a) { Main.this.install(a); }
+            public void open(Stores.App a) { Intent l = getPackageManager().getLaunchIntentForPackage(a.pkg); if (l != null) startActivity(l); }
+            public void store(Stores.App a, boolean play) { Main.this.open(a, play); }
+        });
+        root.addView(sheet, new FrameLayout.LayoutParams(-1, -1));
         setContentView(root);
         loadCatalog();
     }
@@ -122,16 +129,31 @@ public class Main extends Activity {
         try { return getPackageManager().getPackageInfo(pkg, 0).versionCode; } catch (PackageManager.NameNotFoundException e) { return -1; }
     }
 
-    /** Download from our server (streamed to disk), verify SHA-256, hand to the system installer. */
+    static Main instance;
+    InstallSheet sheet;
+    String installingPkg;
+
+    /** Download (GitHub / mirror / f-droid.org), verify, install; progress goes to the sheet. */
     void install(Stores.App a) {
-        status.setText((a.angel ? "Скачиваю " : "Сервер готовит ") + a.title + "…");
+        installingPkg = a.pkg;
+        sheet.progress(0, "Готовлю…");
         net.execute(() -> {
             try {
-                if (!a.angel) Stores.fdroidFetch(a);
-                ui.post(() -> status.setText("Скачиваю " + a.title + " · " + (a.size / 1048576) + " МБ…"));
+                if (a.angel) { /* urls come from the catalog */ }
+                else {
+                    try { Stores.fdroidDirect(a); }
+                    catch (Exception direct) { Stores.fdroidFetch(a); a.urls = new String[] { Stores.API + "/fdroid/" + a.file }; }
+                }
                 java.io.File f = new java.io.File(getCacheDir(), "dl.apk");
-                String sha = Stores.download(Stores.API + (a.angel ? "/apk/" : "/fdroid/") + a.file, f);
-                if (!sha.equals(a.sha256)) { f.delete(); ui.post(() -> status.setText("Ошибка проверки файла — установка отменена")); return; }
+                final long[] lastUi = {0};
+                String sha = Stores.download(a.urls, f, (done, total) -> {
+                    long now = System.currentTimeMillis(); if (now - lastUi[0] < 120) return; lastUi[0] = now;
+                    float p = total > 0 ? done / (float) total : 0;
+                    String txt = total > 0 ? "Скачиваю " + (int) (p * 100) + "%  ·  " + InstallSheet.fmt(done) + " из " + InstallSheet.fmt(total) : "Скачиваю " + InstallSheet.fmt(done);
+                    ui.post(() -> sheet.progress(p, txt));
+                });
+                if (a.sha256 != null && !sha.equals(a.sha256)) { f.delete(); ui.post(() -> sheet.done(false, "Файл повреждён — установка отменена")); return; }
+                ui.post(() -> sheet.progress(-1, "Устанавливаю…"));
                 android.content.pm.PackageInstaller pi = getPackageManager().getPackageInstaller();
                 android.content.pm.PackageInstaller.SessionParams sp = new android.content.pm.PackageInstaller.SessionParams(android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL);
                 sp.setAppPackageName(a.pkg);
@@ -142,15 +164,38 @@ public class Main extends Activity {
                         byte[] buf = new byte[65536]; int n; while ((n = in.read(buf)) > 0) o.write(buf, 0, n);
                         s.fsync(o);
                     }
-                    Intent cb = new Intent(this, InstallReceiver.class);
+                    Intent cb = new Intent(this, InstallReceiver.class).putExtra("pkg", a.pkg);
                     android.app.PendingIntent p = android.app.PendingIntent.getBroadcast(this, id, cb, android.app.PendingIntent.FLAG_UPDATE_CURRENT);
                     s.commit(p.getIntentSender());
                 }
                 f.delete();
-                ui.post(() -> status.setText("Подтверди установку " + a.title));
-            } catch (Throwable e) { android.util.Log.e("AngelStore", "install", e); ui.post(() -> status.setText("Не удалось установить: " + e.getMessage())); }
+            } catch (Throwable e) { android.util.Log.e("AngelStore", "install", e); ui.post(() -> sheet.done(false, "Не удалось: " + e.getMessage())); }
         });
     }
+
+    /** Called by InstallReceiver with the system installer's verdict. */
+    void onInstallResult(String pkg, boolean ok, String msg) {
+        ui.post(() -> {
+            if (sheet != null && sheet.app != null && pkg != null && pkg.equals(sheet.app.pkg)) sheet.done(ok, ok ? "Установлено" : "Ошибка установки: " + msg);
+            if (adapter != null) adapter.notifyDataSetChanged();
+        });
+    }
+
+    void showSheet(Stores.App a) {
+        if (a.card) { open(a, true); return; }
+        String src = a.angel ? "Angel OS" : (a.inFd() && !a.inPlay() && !a.inRu() ? "F-Droid"
+                : (a.inPlay() && a.inRu() ? "Google Play · RuStore" : a.inPlay() ? "Google Play" : a.inRu() ? "RuStore" : "F-Droid"));
+        if (a.inFd() && (a.inPlay() || a.inRu())) src += " · F-Droid";
+        int have = installedCode(a.pkg);
+        String btn;
+        if (a.angel) btn = have < 0 ? "Установить" : (have < a.versionCode ? "Обновить" : "Открыть");
+        else if (have >= 0) btn = "Открыть";
+        else if (a.inFd()) btn = "Установить";
+        else btn = a.inPlay() && installed(PLAY_PKG) ? "Google Play" : "RuStore";
+        sheet.show(a, a.icon == null ? null : icons.get(a.icon), src, btn);
+    }
+
+    @Override public void onBackPressed() { if (sheet != null && sheet.getVisibility() == View.VISIBLE) sheet.hide(); else super.onBackPressed(); }
 
     @Override protected void onResume() { super.onResume(); if (adapter != null) adapter.notifyDataSetChanged(); }
 
@@ -275,15 +320,10 @@ public class Main extends Activity {
             pills.addView(bPlay); rp = new LayoutParams(-2, -2); pills.addView(bRu, rp); fp = new LayoutParams(-2, -2); pills.addView(bFd, fp);
             txt.addView(pills);
             addView(txt, new LayoutParams(0, -2, 1));
-            bPlay.setOnClickListener(v -> {
-                if (!app.angel) { open(app, true); return; }
-                int have = installedCode(app.pkg);
-                if (have >= app.versionCode) { Intent l = getPackageManager().getLaunchIntentForPackage(app.pkg); if (l != null) startActivity(l); else status.setText(app.title + " работает в фоне"); }
-                else install(app);
-            });
+            bPlay.setOnClickListener(v -> { if (!app.angel) open(app, true); else showSheet(app); });
             bRu.setOnClickListener(v -> open(app, false));
-            bFd.setOnClickListener(v -> { if (installed(app.pkg)) { Intent l = getPackageManager().getLaunchIntentForPackage(app.pkg); if (l != null) startActivity(l); } else install(app); });
-            setOnClickListener(v -> { if (app.angel) bPlay.performClick(); else if (!app.inPlay() && !app.inRu() && app.inFd()) bFd.performClick(); else open(app, app.inPlay() && !(app.inRu() && !installed(PLAY_PKG))); });
+            bFd.setOnClickListener(v -> showSheet(app));
+            setOnClickListener(v -> showSheet(app));
         }
         TextView pill(String s, int color) {
             TextView t = text(s, 12, color, true);
