@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="notification_shadow_radius">22dp</dimen>
+    <dimen name="notification_side_paddings">12dp</dimen>
+    <dimen name="qs_tile_text_size">11sp</dimen>
+    <dimen name="widget_big_font_size">96dp</dimen>
+    <dimen name="keyguard_clock_top_margin">44dp</dimen>
+    <dimen name="widget_label_font_size">17dp</dimen>
+</resources>

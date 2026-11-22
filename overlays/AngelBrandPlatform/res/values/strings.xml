@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lineage_api_level">Angel OS API level</string>
+    <string name="lineage_updates">Angel OS updates</string>
+    <string name="lineageos_system_label">Angel OS System</string>
+    <string name="permlab_writeSettings">modify Angel OS system settings</string>
+    <string name="permdesc_writeSettings">Allows an app to modify Angel OS system settings.</string>
+    <string name="permlab_writeSecureSettings">modify Angel OS secure system settings</string>
+    <string name="permdesc_writeSecureSettings">Allows an app to modify Angel OS secure system settings. Not for use by normal apps.</string>
+    <string name="permdesc_useHardwareFramework">Allows an app access to the Angel OS hardware framework.</string>
+</resources>

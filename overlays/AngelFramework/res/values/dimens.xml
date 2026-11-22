@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rounded_corner_radius">24dp</dimen>
+    <dimen name="rounded_corner_radius_top">24dp</dimen>
+    <dimen name="rounded_corner_radius_bottom">24dp</dimen>
+    <dimen name="config_dialogCornerRadius">26dp</dimen>
+    <dimen name="config_buttonCornerRadius">20dp</dimen>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="os_name" translatable="false">Angel OS</string>
+    <string name="setup_services">Angel OS features</string>
+    <string name="intro_restore_subtitle">If you have a backup from your previous phone, you can restore it here.</string>
+    <string name="services_metrics_label">%1$s by sending diagnostic and usage data. Angel OS keeps this switched off: nothing leaves your phone.</string>
+    <string name="update_recovery_title">Update recovery</string>
+    <string name="update_recovery_setting">Update recovery alongside the OS</string>
+    <string name="update_recovery_description">Updates the recovery on first boot after every system update.</string>
+</resources>

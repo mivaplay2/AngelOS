@@ -1,0 +1,15 @@
+# never commit: device dumps, system images, signing keys, build output
+work/
+*.img
+*.img.xz
+*.bin
+*.jks
+*.pem
+!media/*.pem
+keys/
+build/
+*.apk
+!assets/*.apk
+.venv/
+__pycache__/
+.DS_Store

@@ -1,0 +1,34 @@
+[Unit]
+Description=Angel Store API (Play search proxy + Angel OS app catalog)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/angelstore/angelstore_server.py
+Environment=ANGEL_REPO=/opt/angelstore/repo ANGEL_PORT=8787
+# unprivileged throwaway user; the TLS cert is handed over as a credential
+DynamicUser=yes
+LoadCredential=cert:/root/cert/ip/fullchain.pem
+LoadCredential=key:/root/cert/ip/privkey.pem
+AmbientCapabilities=
+CapabilityBoundingSet=
+NoNewPrivileges=yes
+ProtectSystem=strict
+CacheDirectory=angelstore
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryMax=150M
+# pick up the renewed (short-lived) IP certificate every day
+RuntimeMaxSec=1d
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

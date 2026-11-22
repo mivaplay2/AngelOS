@@ -1,0 +1,1 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="local.cph1923.navhandle" android:versionCode="1" android:versionName="1.0"><application android:hasCode="false" android:label="Angel navigation handle"/><overlay android:targetPackage="com.android.systemui" android:isStatic="true" android:priority="999"/></manifest>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- shown in the quick settings footer instead of "11 (RQ3A...)" -->
+    <string name="bugreport_status" formatted="false">Angel OS</string>
+</resources>

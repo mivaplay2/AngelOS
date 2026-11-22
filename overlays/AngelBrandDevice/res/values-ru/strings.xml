@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Angel Device</string>
+    <string name="title_activity_top_level">Устройство</string>
+    <string name="desc_activity_top_level">Яркость, звук и функции телефона</string>
+</resources>

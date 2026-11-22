@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lineage_api_level">Версия API Angel OS</string>
+    <string name="lineage_updates">Обновления Angel OS</string>
+    <string name="lineageos_system_label">Система Angel OS</string>
+    <string name="permlab_writeSettings">изменение настроек системы Angel OS</string>
+    <string name="permdesc_writeSettings">Приложение сможет изменять настройки системы Angel OS.</string>
+    <string name="permlab_writeSecureSettings">изменение настроек безопасности Angel OS</string>
+    <string name="permdesc_writeSecureSettings">Позволяет приложению изменять параметры безопасности Angel OS. Не для обычных приложений.</string>
+    <string name="permdesc_useHardwareFramework">Позволяет приложению использовать аппаратный фреймворк Angel OS.</string>
+</resources>

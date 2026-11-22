@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="os.angel.update" android:versionCode="4" android:versionName="1.3">
+    <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="29"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_CACHE_FILESYSTEM"/>
+    <uses-permission android:name="android.permission.REBOOT"/>
+    <uses-permission android:name="android.permission.RECOVERY"/>
+    <application android:label="@string/title" android:icon="@mipmap/ic_launcher" android:allowBackup="false" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+        <activity android:name=".Main" android:exported="true" android:label="@string/title">
+            <!-- shows up in Settings > System -->
+            <intent-filter><action android:name="com.android.settings.action.IA_SETTINGS"/></intent-filter>
+            <meta-data android:name="com.android.settings.category" android:value="com.android.settings.category.ia.system"/>
+            <meta-data android:name="com.android.settings.title" android:resource="@string/title"/>
+            <meta-data android:name="com.android.settings.summary" android:resource="@string/summary"/>
+            <meta-data android:name="com.android.settings.icon" android:resource="@mipmap/ic_launcher"/>
+        </activity>
+    </application>
+</manifest>

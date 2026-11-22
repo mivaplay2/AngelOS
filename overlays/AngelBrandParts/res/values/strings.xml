@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lineageparts_title">Angel OS Settings</string>
+    <string name="privacy_settings_category">Angel OS</string>
+    <string name="egg_title">Angel OS Easter Egg</string>
+    <string name="anonymous_statistics_title">Anonymous statistics</string>
+    <string name="anonymous_statistics_summary">Disabled in Angel OS: no usage data leaves the device.</string>
+    <!-- statistics reporting goes nowhere -->
+    <string name="stats_lineage_url" translatable="false">https://127.0.0.1/</string>
+</resources>

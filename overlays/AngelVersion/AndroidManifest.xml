@@ -1,0 +1,1 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="local.cph1923.angelver" android:versionCode="1" android:versionName="1.0"><application android:hasCode="false" android:label="Angel OS branding"/><overlay android:targetPackage="lineageos.platform" android:isStatic="true" android:priority="999"/></manifest>

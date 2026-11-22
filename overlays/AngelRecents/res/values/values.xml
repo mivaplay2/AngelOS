@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="portrait_task_card_horz_space">104dp</dimen>
+    <dimen name="task_thumbnail_icon_size">40dp</dimen>
+    <dimen name="overview_actions_height">60dp</dimen>
+    <dimen name="overview_actions_bottom_margin_gesture">20dp</dimen>
+    <string name="recents_clear_all">Close all</string>
+    <string name="action_screenshot">Snapshot</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_services">Возможности Angel OS</string>
+    <string name="intro_restore_subtitle">Если у вас есть резервная копия с прошлого телефона, её можно восстановить здесь.</string>
+    <string name="services_metrics_label">%1$s, отправляя данные диагностики и использования. В Angel OS это выключено: данные не покидают телефон.</string>
+    <string name="update_recovery_title">Обновление recovery</string>
+    <string name="update_recovery_setting">Обновлять recovery вместе с системой</string>
+    <string name="update_recovery_description">Обновляет recovery при первом запуске после каждого обновления системы.</string>
+</resources>

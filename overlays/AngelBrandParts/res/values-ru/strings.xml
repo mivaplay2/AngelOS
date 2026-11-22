@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lineageparts_title">Настройки Angel OS</string>
+    <string name="anonymous_statistics_title">Анонимная статистика</string>
+    <string name="anonymous_statistics_summary">В Angel OS отключена: данные об использовании не покидают устройство.</string>
+</resources>

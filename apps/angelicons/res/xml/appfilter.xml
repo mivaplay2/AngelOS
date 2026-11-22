@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item component="ComponentInfo{com.google.android.dialer/com.google.android.dialer.extensions.GoogleDialtactsActivity}" drawable="ic_dialer"/>
+    <item component="ComponentInfo{com.android.dialer/com.android.dialer.main.impl.MainActivity}" drawable="ic_dialer"/>
+    <item component="ComponentInfo{com.google.android.apps.messaging/com.google.android.apps.messaging.ui.ConversationListActivity}" drawable="ic_messages"/>
+    <item component="ComponentInfo{com.android.messaging/com.android.messaging.ui.conversationlist.ConversationListActivity}" drawable="ic_messages"/>
+    <item component="ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity}" drawable="ic_contacts"/>
+    <item component="ComponentInfo{com.android.contacts/com.android.contacts.activities.PeopleActivity}" drawable="ic_contacts"/>
+    <item component="ComponentInfo{com.android.camera2/com.android.camera.CameraLauncher}" drawable="ic_camera"/>
+    <item component="ComponentInfo{com.android.chrome/com.google.android.apps.chrome.Main}" drawable="ic_chrome"/>
+    <item component="ComponentInfo{com.android.documentsui/com.android.documentsui.LauncherActivity}" drawable="ic_files"/>
+    <item component="ComponentInfo{com.android.settings/com.android.settings.Settings}" drawable="ic_settings"/>
+    <item component="ComponentInfo{com.android.stk/com.android.stk.StkMain}" drawable="ic_sim"/>
+    <item component="ComponentInfo{com.android.vending/com.android.vending.AssetBrowserActivity}" drawable="ic_store"/>
+    <item component="ComponentInfo{com.google.android.calculator/com.android.calculator2.Calculator}" drawable="ic_calculator"/>
+    <item component="ComponentInfo{com.android.calculator2/com.android.calculator2.Calculator}" drawable="ic_calculator"/>
+    <item component="ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock}" drawable="ic_clock"/>
+    <item component="ComponentInfo{com.android.deskclock/com.android.deskclock.DeskClock}" drawable="ic_clock"/>
+    <item component="ComponentInfo{com.android.gallery3d/com.android.gallery3d.app.GalleryActivity}" drawable="ic_gallery"/>
+    <item component="ComponentInfo{com.google.android.keep/com.google.android.keep.activities.BrowseActivity}" drawable="ic_keep"/>
+    <item component="ComponentInfo{org.lineageos.audiofx/org.lineageos.audiofx.activity.ActivityMusic}" drawable="ic_audiofx"/>
+    <item component="ComponentInfo{org.lineageos.eleven/org.lineageos.eleven.ui.activities.HomeActivity}" drawable="ic_music"/>
+    <item component="ComponentInfo{org.lineageos.etar/com.android.calendar.AllInOneActivity}" drawable="ic_calendar"/>
+    <item component="ComponentInfo{org.lineageos.jelly/org.lineageos.jelly.MainActivity}" drawable="ic_browser"/>
+    <item component="ComponentInfo{org.lineageos.recorder/org.lineageos.recorder.RecorderActivity}" drawable="ic_recorder"/>
+</resources>
